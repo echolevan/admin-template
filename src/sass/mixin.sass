@@ -1,0 +1,19 @@
+// 不换行
+@mixin no-wrap
+  text-overflow: ellipsis
+  overflow: hidden
+  white-space: nowrap
+
+//文字溢出
+@mixin overflow-nowrap
+  overflow: hidden
+  white-space: nowrap
+  text-overflow: ellipsis
+
+@mixin position-middle
+  position: absolute
+  top: 50%
+  left: 50%
+  transform: translate(-50%,-50%)
+
+

@@ -36,7 +36,7 @@ import {
     NH1,
     NWatermark,
     NBackTop,
-    NLoadingBarProvider
+    NLoadingBarProvider,
 } from 'naive-ui'
 
 const naive = create({
@@ -68,7 +68,7 @@ const naive = create({
         NH1,
         NWatermark,
         NBackTop,
-        NLoadingBarProvider
+        NLoadingBarProvider,
     ]
 })
 

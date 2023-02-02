@@ -14,7 +14,7 @@
           <n-scrollbar x-scrollable ref="scrollbar">
             <n-space :wrap="false" align="center" justify="start" inline style="height: 45px">
               <n-tag class="hover-hand" v-for="(routerLink, key) in routerLinkHistoryStore.routerLinkHistory" :key="key"
-                     :type="route.name === routerLink.router ? 'success' : ''" @click="toRouter(routerLink.router)">
+                     :type="route.name === routerLink.router ? 'success' : ''" @click="toRouter(routerLink.router)" @contextmenu="(e) =>handleContextMenu(e, routerLink)">
                 {{ routerLink.name }}
                 <template #icon>
                   <n-icon>
@@ -25,6 +25,16 @@
               </n-tag>
             </n-space>
           </n-scrollbar>
+          <n-dropdown
+              placement="bottom-start"
+              trigger="manual"
+              :x="x"
+              :y="y"
+              :options="dropdownOptions"
+              :show="showDropdown"
+              :on-clickoutside="clickOutside"
+              @select="handleSelect"
+          />
         </div>
         <n-button size="small" type="tertiary" class="tabLineButton" id="tabLineButtonRight"
                   @click="changeTableLine('right')">
@@ -40,7 +50,7 @@
 </template>
 
 <script lang="ts">
-import {defineComponent, ref} from 'vue'
+import {defineComponent, ref, nextTick} from 'vue'
 import {
   KeyboardArrowLeftRound as Left,
   KeyboardArrowRightRound as Right,
@@ -49,6 +59,7 @@ import {
 } from '@vicons/material'
 import {useRouterLinkHistoryStore} from '@/stores/tabLine'
 import {useRoute, useRouter} from "vue-router"
+import type {ScrollbarInst} from "naive-ui";
 
 export default defineComponent({
   components: {
@@ -61,15 +72,59 @@ export default defineComponent({
     const routerLinkHistoryStore = useRouterLinkHistoryStore()
     const route = useRoute()
     const router = useRouter()
+    const dropdownOptions = ref([
+      {
+        label: '关闭其他标签',
+        key: 'closeTab'
+      }
+    ])
+    const showDropdown = ref(false)
+    const x = ref(0)
+    const y = ref(0)
+
+    const scrollbar= ref<ScrollbarInst | any>()
+
+    const currentRouter = <any>ref({})
 
     return {
       routerLinkHistoryStore,
       route,
+      dropdownOptions,
+      showDropdown,
+      scrollbar,
+      x,
+      y,
+      handleContextMenu(e: { preventDefault: () => void; clientX: number; clientY: number }, router: any){
+        currentRouter.value = router
+        e.preventDefault()
+        showDropdown.value = true
+        nextTick().then(() => {
+          showDropdown.value = true
+          x.value = e.clientX
+          y.value = e.clientY
+        })
+      },
+      clickOutside() {
+        showDropdown.value = false
+      },
+      handleSelect(value: string) {
+        switch (value) {
+          case 'closeTab':
+            routerLinkHistoryStore.delOtherTable(currentRouter.value)
+            if (route.name !== currentRouter.value.router) {
+              router.push({name: currentRouter.value.router})
+            }
+            showDropdown.value = false
+            break;
+          default:
+            break;
+        }
+      },
       changeTableLine(type: string) {
         if (type === 'left') {
-          this.$refs.scrollbar.scrollBy({left: -30})
+          scrollbar.value.scrollBy({left: -30})
         } else {
-          this.$refs.scrollbar.scrollBy({left: 30})
+          scrollbar.value.scrollBy({left: 30})
         }
       },
       toRouter(routerLink: any) {

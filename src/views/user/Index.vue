@@ -1,13 +1,111 @@
 <template>
-  <div>user.index</div>
+  <div>
+    <v-table :columns="columns" :data="data" :loading="loading" :pagination="pagination"
+             @updateSorter="updateSorter" @update:filters="updateFilters" @update:page="updatePage"></v-table>
+  </div>
 </template>
 
 <script lang="ts">
-import {defineComponent, ref} from 'vue'
+import {defineComponent, ref, h} from 'vue'
+import VTable from '@/components/coms/Table.vue'
+import {NTag, NButton} from 'naive-ui'
 
 export default defineComponent({
+  components: {
+    VTable
+  },
   setup() {
+    const columns = <any>ref([])
+    const data = <any>ref([])
+    const loading = ref(false)
+    const pagination = <any>ref({
+      page: 1,
+      itemCount: 100,
+      pageSize: 10,
+      prefix({itemCount}: { itemCount: string }) {
+        return `总数：${itemCount}`
+      }
+    })
+
+    columns.value = [
+      ['selection'],
+      ['', '名称', 'name', {}, false, false, []],
+      ['', '年龄', 'age', {}, true, true, [{label: '<20', value: 1}, {label: '>=20', value: 2}]],
+      ['render', '标签', 'tags', {
+        render(row: { tags: any[] }) {
+          return row.tags.map((tagKey) => {
+            return h(
+                NTag,
+                {
+                  style: {
+                    marginRight: '6px'
+                  },
+                  type: 'info',
+                  bordered: false
+                },
+                {
+                  default: () => tagKey
+                }
+            )
+          })
+        }
+      }, true, true, [{label: '<20', value: 1}, {label: '>=20', value: 2}]],
+      ['', '注册时间', 'createdAt', '', true, false, []],
+      ['render', '操作', 'actions', {
+        render (row: any) {
+          return h(
+              NButton,
+              {
+                size: 'small',
+                onClick: () => sendMail(row)
+              },
+              { default: () => 'Send Email' + '--' +row.name }
+          )
+        }
+      }, false, false, []],
+    ]
+
+    data.value = [
+      {'id': 1, 'name': 'tom', 'age': 18, 'tags': ['cool-1', 'teacher'], 'createdAt': '2022-02-02 22:00:00',},
+      {
+        'id': 2,
+        'name': 'Jell',
+        'age': 30,
+        'tags': ['cool', 'teacher'],
+        'createdAt': '2022-02-03 22:00:00',
+      }
+    ]
+
+    const sendMail = (row: any) => {
+      data.value.push({
+        'id': 3,
+        'name': 'Kit',
+        'age': 30,
+        'tags': ['cool', 'teacher-1'],
+        'createdAt': '2022-02-034 22:00:00',
+      })
+      console.log(row);
+    }
+
     return {
+      columns,
+      data,
+      loading,
+      pagination,
+      updateSorter: (sorter: any) => {
+        pagination.value.itemCount = 106
+        loading.value = !loading.value
+        console.log(sorter);
+      },
+      updateFilters: (filters: any) => {
+        loading.value = !loading.value
+        console.log(filters);
+      },
+      updatePage: (currentPage: any) => {
+        loading.value = !loading.value
+        pagination.value.page = currentPage
+        console.log(currentPage);
+      }
     }
   }
 })

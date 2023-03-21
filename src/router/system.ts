@@ -21,7 +21,7 @@ export default [
             {
                 path: '/user1',
                 name: 'user1',
-                component: User,
+                component: Analysis,
                 meta: {
                     title: '系统管理01',
                 }

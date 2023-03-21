@@ -39,7 +39,8 @@ import {
     NLoadingBarProvider,
     NDataTable,
     NGrid,
-    NGi
+    NGi,
+    NStatistic
 } from 'naive-ui'
 
 const naive = create({
@@ -74,7 +75,8 @@ const naive = create({
         NLoadingBarProvider,
         NDataTable,
         NGrid,
-        NGi
+        NGi,
+        NStatistic
     ]
 })
 

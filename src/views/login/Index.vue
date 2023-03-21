@@ -7,27 +7,15 @@
   </div>
 </template>
 
-<script lang="ts">
-import {defineComponent, ref} from 'vue'
+<script lang="ts" setup>
+import {ref} from 'vue'
 import VLogin from '@/components/login/Login.vue'
 import VForgetPassword from '@/components/login/ForgetPassword.vue'
 
-export default defineComponent({
-  components: {
-    VLogin,
-    VForgetPassword
-  },
-  setup() {
-    const pageStatus = ref('login')
-    const changePageStatus = (value: string) => {
-      pageStatus.value = value
-    }
-    return {
-      pageStatus,
-      changePageStatus
-    }
-  }
-})
+const pageStatus = ref('login')
+const changePageStatus = (value: string) => {
+  pageStatus.value = value
+}
 </script>
 
 <style scoped lang="sass" rel="stylesheet/sass">

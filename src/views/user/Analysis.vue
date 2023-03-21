@@ -2,15 +2,8 @@
   <div>user.Analysis</div>
 </template>
 
-<script lang="ts">
-import {defineComponent, ref} from 'vue'
+<script lang="ts" setup>
 
-export default defineComponent({
-  setup() {
-    return {
-    }
-  }
-})
 </script>
 
 <style scoped lang="sass" rel="stylesheet/sass">

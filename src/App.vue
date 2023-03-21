@@ -9,22 +9,11 @@
   </n-config-provider>
 </template>
 
-<script lang="ts">
-import {defineComponent} from 'vue'
+<script lang="ts" setup>
 import {darkTheme, dateZhCN, zhCN} from 'naive-ui'
 import {useThemeStore} from '@/stores/base'
 
-export default defineComponent({
-  setup() {
-    const themeStore = useThemeStore()
-    return {
-      darkTheme,
-      dateZhCN,
-      zhCN,
-      themeStore
-    }
-  }
-})
+const themeStore = useThemeStore()
 </script>
 
 <style scoped lang="sass">

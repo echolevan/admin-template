@@ -37,7 +37,9 @@ import {
     NWatermark,
     NBackTop,
     NLoadingBarProvider,
-    NDataTable
+    NDataTable,
+    NGrid,
+    NGi
 } from 'naive-ui'
 
 const naive = create({
@@ -70,7 +72,9 @@ const naive = create({
         NWatermark,
         NBackTop,
         NLoadingBarProvider,
-        NDataTable
+        NDataTable,
+        NGrid,
+        NGi
     ]
 })
 

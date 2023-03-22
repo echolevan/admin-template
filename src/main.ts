@@ -40,7 +40,14 @@ import {
     NDataTable,
     NGrid,
     NGi,
-    NStatistic
+    NStatistic,
+    NNumberAnimation,
+    NSelect,
+    NTree,
+    NAlert,
+    NPagination,
+    NPopconfirm,
+    NDivider
 } from 'naive-ui'
 
 const naive = create({
@@ -76,7 +83,14 @@ const naive = create({
         NDataTable,
         NGrid,
         NGi,
-        NStatistic
+        NStatistic,
+        NNumberAnimation,
+        NSelect,
+        NTree,
+        NAlert,
+        NPagination,
+        NPopconfirm,
+        NDivider
     ]
 })
 

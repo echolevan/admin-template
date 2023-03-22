@@ -1,7 +1,7 @@
 import Main from '@/components/common/main.vue'
 
-const User = () => import("@/views/user/Index.vue")
-const Analysis = () => import((`@/views/user/Analysis.vue`))
+const SysIndex = () => import("@/views/system/Index.vue")
+const SysPage = () => import((`@/views/system/Page.vue`))
 
 import {
     BuildCircleOutlined as SystemIcon,
@@ -10,8 +10,8 @@ import {
 export default [
     {
         path: '/',
-        name: '_user2',
-        redirect: '/user1',
+        name: '_system',
+        redirect: '/system',
         component: Main,
         meta: {
             title: '系统管理',
@@ -19,19 +19,19 @@ export default [
         },
         children: [
             {
-                path: '/user1',
-                name: 'user1',
-                component: Analysis,
+                path: '/system',
+                name: 'system',
+                component: SysIndex,
                 meta: {
-                    title: '系统管理01',
+                    title: '系统设置',
                 }
             },
             {
-                path: '/analysis2',
-                name: 'analysis2',
-                component: Analysis,
+                path: '/system/page',
+                name: 'systemPage',
+                component: SysPage,
                 meta: {
-                    title: '系统管理02',
+                    title: '页面管理',
                 }
             }
         ]

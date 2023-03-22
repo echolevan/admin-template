@@ -11,7 +11,7 @@ export default [
     {
         path: '/',
         name: '_permission',
-        redirect: '/userPermission',
+        redirect: '/permission',
         component: Main,
         meta: {
             title: '权限管理',
@@ -19,7 +19,7 @@ export default [
         },
         children: [
             {
-                path: '/userPermission',
+                path: '/permission/user',
                 name: 'userPermission',
                 component: UserPermission,
                 meta: {
@@ -27,7 +27,7 @@ export default [
                 },
             },
             {
-                path: '/userRole',
+                path: '/permission/role',
                 name: 'userRole',
                 component: UserRole,
                 meta: {
@@ -35,7 +35,7 @@ export default [
                 }
             },
             {
-                path: '/staffPermission',
+                path: '/permission/staff',
                 name: 'staffPermission',
                 component: UserPermission,
                 meta: {
@@ -43,7 +43,7 @@ export default [
                 },
             },
             {
-                path: '/staffRole',
+                path: '/role/staff',
                 name: 'staffRole',
                 component: UserRole,
                 meta: {

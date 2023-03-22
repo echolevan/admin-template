@@ -122,7 +122,9 @@ for (let column of propsColumns) {
         ...column[3],
         sorter: column[4],
         sortOrder: false,
-        ...column[5] ? {filter: true, filterOptions: column[6]} : {}
+        ...column[5] ? {filter: true, filterOptions: column[6]} : {},
+        align: 'right',
+        ellipsis: true
       }
       tableColumns.value.push(obj)
       break;
@@ -132,7 +134,8 @@ for (let column of propsColumns) {
         key: column[2],
         sorter: column[4],
         sortOrder: false,
-        ...column[5] ? {filter: true, filterOptions: column[6]} : {}
+        ...column[5] ? {filter: true, filterOptions: column[6]} : {},
+        ellipsis: true
       })
       break;
   }

@@ -1,7 +1,8 @@
 <template>
   <div>
     <v-table :columns="columns" :data="data" :loading="loading" :pagination="pagination" :searchParams="searchParams"
-             @updateSorter="updateSorter" @update:filters="updateFilters" @update:page="updatePage" @submitSearch="submitSearch"></v-table>
+             @updateSorter="updateSorter" @update:filters="updateFilters" @update:page="updatePage"
+             @submitSearch="submitSearch"></v-table>
   </div>
 </template>
 

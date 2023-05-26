@@ -23,18 +23,10 @@ axiosInstance.interceptors.response.use(
         }
 
         if (response.status === 200) {
-            let code = response.data.code
-            if (code === 200) {
-                // @ts-ignore
-                window.$LoadingBar && window.$LoadingBar.finish()
-                return response;
-            } else {
-                // @ts-ignore
-                window.$Message.error(response.data.message || '请求错误，请稍后重试！')
-                // @ts-ignore
-                window.$LoadingBar && window.$LoadingBar.error()
-                return Promise.reject(response.data);
-            }
+            showMessage(response.status);
+            // @ts-ignore
+            window.$LoadingBar && window.$LoadingBar.error()
+            return response;
         } else {
             showMessage(response.status);
             // @ts-ignore

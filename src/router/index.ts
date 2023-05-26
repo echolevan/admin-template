@@ -1,7 +1,7 @@
 import {createRouter, createWebHistory} from 'vue-router'
 import home from './home.js'
 import user from './user.js'
-import permission from './permission.js'
+import bill from './bill.js'
 import system from './system.js'
 import {useRouterLinkHistoryStore} from '@/stores/tabLine'
 
@@ -10,8 +10,8 @@ const router = createRouter({
     routes: [
         ...home,
         ...user,
-        ...permission,
-        ...system
+        ...bill,
+        ...system,
     ]
 })
 

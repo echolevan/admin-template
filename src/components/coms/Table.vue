@@ -1,5 +1,6 @@
 <template>
   <n-form
+      style="flex-wrap: wrap"
       v-if="props.searchParams.length > 0"
       ref="formRef"
       inline
@@ -8,7 +9,7 @@
       :model="search"
   >
     <n-form-item v-for="value of props.searchParams" :label="value[1]" path="user.name" width="200">
-      <n-input v-model:value="search[value[2]]" :placeholder="`请输入${value[1]}`" v-if="value[0] === 'input'"/>
+      <n-input v-model:value="search[value[2]]" :placeholder="`请输入${value[1]}`" v-if="value[0] === 'input'" clearable/>
       <n-select
           style="width: 200px"
           v-if="value[0] === 'select'"
@@ -16,8 +17,11 @@
           :placeholder="`请选择${value[1]}`"
           :options="value[4]"
           :multiple="value[5] === 'multiple'"
+          clearable
       />
       <n-switch v-if="value[0] === 'switch'" v-model:value="search[value[2]]"/>
+      <n-date-picker v-if="value[0] === 'daterange'" v-model:value="search[value[2]]" type="daterange" clearable />
+      <n-date-picker v-if="value[0] === 'monthrange'" v-model:value="search[value[2]]" type="monthrange" clearable />
     </n-form-item>
     <n-form-item>
       <n-button attr-type="button" type="warning" @click="clearSearch">重置条件</n-button>
@@ -32,11 +36,12 @@
       :data="props.data"
       :row-key="rowKey"
       :loading="props.loading"
+      :scroll-x="props.x"
       @update:checked-row-keys="handleCheck"
       @update:sorter="handleSorterChange"
   />
 
-  <n-divider />
+  <n-divider/>
 
   <n-space justify="space-between">
     <n-space>
@@ -53,8 +58,9 @@
         </n-popconfirm>
       </div>
     </n-space>
-    <n-pagination v-model:page="props.pagination.page" :item-count="props.pagination.itemCount" size="large"
-                  :page-size="props.pagination.pageSize" :prefix="props.pagination.prefix"/>
+    <n-pagination v-if="pagination.page > 0" v-model:page="props.pagination.page" :item-count="props.pagination.itemCount" size="large"
+                  :page-size="props.pagination.pageSize" :prefix="props.pagination.prefix"
+                  :on-update:page="updatePage"/>
   </n-space>
 
 </template>
@@ -94,11 +100,15 @@ const props = defineProps({
   selectionParams: {
     type: Array,
     default: []
+  },
+  x: {
+    type: Number,
+    default: 1800
   }
 })
 
 
-const emit = defineEmits(['updateSorter', 'submitSearch', 'batchSubmit'])
+const emit = defineEmits(['updateSorter', 'submitSearch', 'batchSubmit', 'updatePage'])
 
 const tableColumns = <any>ref([])
 const data = props.data
@@ -123,19 +133,24 @@ for (let column of propsColumns) {
         sorter: column[4],
         sortOrder: false,
         ...column[5] ? {filter: true, filterOptions: column[6]} : {},
-        align: 'right',
-        ellipsis: true
+        align: column[9] || 'center',
+        fixed: column[7] || 'false',
+        width: column[8] || 'undefined',
       }
       tableColumns.value.push(obj)
       break;
     default:
       tableColumns.value.push({
+        width: column[8] || 'undefined',
         title: column[1],
         key: column[2],
         sorter: column[4],
         sortOrder: false,
         ...column[5] ? {filter: true, filterOptions: column[6]} : {},
-        ellipsis: true
+        ellipsis: {
+          tooltip: true
+        },
+        fixed: column[7] || 'false'
       })
       break;
   }
@@ -163,6 +178,11 @@ const submitSearch = () => {
 
 const toEmit = (type: string) => {
   emit('batchSubmit', type, checkIds.value)
+}
+
+const updatePage = (page: number) => {
+  console.log(1);
+  emit('updatePage', page)
 }
 
 const handleCheck = (rowKeys: DataTableRowKey[]) => {

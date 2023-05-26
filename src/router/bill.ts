@@ -1,7 +1,7 @@
 import Main from '@/components/common/main.vue'
 
-const User = () => import("@/views/user/Index.vue")
-const Analysis = () => import((`@/views/user/Analysis.vue`))
+const User = () => import("@/views/bill/Index.vue")
+const Analysis = () => import((`@/views/bill/Analysis.vue`))
 import {
     AccountCircleOutlined as UserIcon,
 } from '@vicons/material'
@@ -9,28 +9,28 @@ import {
 export default [
     {
         path: '/',
-        name: '_user',
-        redirect: '/user',
+        name: '_bill',
+        redirect: '/bill/recharge',
         component: Main,
         meta: {
-            title: '用户管理',
+            title: '冲提管理',
             icon: UserIcon
         },
         children: [
             {
-                path: '/user',
-                name: 'user',
+                path: '/bill/recharge',
+                name: 'billRecharge',
                 component: User,
                 meta: {
-                    title: '用户列表',
+                    title: '充值列表',
                 }
             },
             {
-                path: '/analysis',
-                name: 'analysis',
+                path: '/bill/withdrawal',
+                name: 'billWithdrawal',
                 component: Analysis,
                 meta: {
-                    title: '钱包管理',
+                    title: '提现管理',
                 }
             }
         ]

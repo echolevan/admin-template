@@ -10,6 +10,7 @@
 import {ref, h} from 'vue'
 import VTable from '@/components/coms/Table.vue'
 import {NTag, NButton} from 'naive-ui'
+import {apiChangeStatus, apiGetUser} from "@/api/user";
 
 const columns = <any>ref([])
 const searchParams = <any>ref([])
@@ -25,38 +26,46 @@ const pagination = <any>ref({
 })
 
 columns.value = [
-  ['selection'],
-  ['', '名称', 'name', {}, false, false, []],
-  ['', '年龄', 'age', {}, true, true, [{label: '<20', value: 1}, {label: '>=20', value: 2}]],
-  ['render', '标签', 'tags', {
-    render(row: { tags: any[] }) {
-      return row.tags.map((tagKey) => {
-        return h(
-            NTag,
-            {
-              style: {
-                marginRight: '6px'
-              },
-              type: 'info',
-              bordered: false
-            },
-            {
-              default: () => tagKey
-            }
-        )
-      })
+  ['', '注册地址', 'address', {}, false, false, []],
+  ['', '门罗币充值地址', 'xmr_address', {}, false, false, []],
+  ['', 'google私钥', 'google_secret', {}, false, false, []],
+  ['render', '助记词是否已备份', 'help_words_back_up', {
+    render(row: any) {
+      return h(
+          NTag,
+          {
+            size: 'small',
+            type: row.help_words_back_up === 1 ? 'success' : 'error',
+          },
+          {default: () => row.help_words_back_up === 1 ? '已备份' : '未备份'}
+      )
     }
-  }, true, true, [{label: '<20', value: 1}, {label: '>=20', value: 2}]],
-  ['', '注册时间', 'createdAt', '', true, false, []],
+  }, false, false, []],
+  ['', '大区业绩', 'max_achievement', {}, false, false, []],
+  ['', '小区业绩', 'min_achievement', {}, false, false, []],
+  ['', '手续费折扣百分比', 'fee_discount', {}, false, false, []],
+  ['render', '状态', 'status', {
+    render(row: any) {
+      return h(
+          NTag,
+          {
+            size: 'small',
+            type: row.status === 1 ? 'success' : 'error',
+          },
+          {default: () => row.status === 1 ? '正常' : '冻结'}
+      )
+    }
+  }, false, false, []],
   ['render', '操作', 'actions', {
     render(row: any) {
       return h(
           NButton,
           {
             size: 'small',
-            onClick: () => sendMail(row)
+            type: 'warning',
+            onClick: () => changeStatus(row)
           },
-          {default: () => 'Send Email' + '--' + row.name}
+          {default: () => '禁/启用'}
       )
     }
   }, false, false, []],
@@ -64,36 +73,21 @@ columns.value = [
 
 searchParams.value = [
   // 类型、字段中文名、字段名、 默认值、 筛选条件
-  ['input', '名称', 'name', '', []],
-  ['select', '年龄', 'age', '', [{label: '<20', value: 1}, {label: '>=20', value: 2}], 'multiple'],
-  ['switch', '是否是主账号', 'isMaster', false]
+  ['input', '注册地址', 'address', '', []],
 ]
 
-const sendMail = (row: any) => {
-  data.value.push({
-    'id': 3,
-    'name': 'Kit',
-    'age': 30,
-    'tags': ['cool', 'teacher-1'],
-    'createdAt': '2022-02-034 22:00:00',
+const changeStatus = (row: any) => {
+  apiChangeStatus(row.id).then(()=> {
+    getLists(pagination.page, pagination.pageSize)
   })
-  console.log(row);
 }
 
-const getLists = (page: number, size: number) => {
-  setTimeout(() => {
-    data.value = [
-      {'id': 1, 'name': 'tom', 'age': 18, 'tags': ['cool-1', 'teacher'], 'createdAt': '2022-02-02 22:00:00',},
-      {
-        'id': 2,
-        'name': 'Jell',
-        'age': 30,
-        'tags': ['cool', 'teacher'],
-        'createdAt': '2022-02-03 22:00:00',
-      }
-    ]
+const getLists = (page: number, size: number, search: any = {}) => {
+  apiGetUser(page, size, search).then((res)=> {
+    data.value = res.data
+    pagination.value.itemCount = res.total
     loading.value = false
-  }, 1000)
+  })
 }
 
 // 获取数据
@@ -120,8 +114,7 @@ const updatePage = (currentPage: any) => {
 const submitSearch = (search: any) => {
   loading.value = !loading.value
   pagination.value.page = 1
-  getLists(pagination.page, pagination.pageSize)
-  console.log(search);
+  getLists(pagination.page, pagination.pageSize, search)
 }
 
 </script>

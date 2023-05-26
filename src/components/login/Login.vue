@@ -40,8 +40,8 @@ import {useMessage} from "naive-ui";
 export default defineComponent({
   setup(_, ctx) {
     const model = ref<any>({
-      user: 'lei123',
-      password: 'lei123',
+      user: 'admin',
+      password: '123456',
     })
     const router = useRouter()
     const _message = useMessage()
@@ -51,12 +51,12 @@ export default defineComponent({
     const loading = ref(false)
     const submitLogon = () => {
       loading.value = true
-      apiLogin(model.value.user, model.value.password).then(({data, message}) => {
-        _message.info(message)
+      apiLogin(model.value.user, model.value.password).then((data) => {
+        _message.success(data.message)
         localStorage.setItem('userToken', data.token)
         // 获取用户信息
         apiUserInfo().then(({data})=> {
-          localStorage.setItem('userInfo', JSON.stringify(data.auth))
+          localStorage.setItem('userInfo', JSON.stringify(data))
           router.push({name: '_home'})
         })
         loading.value = false

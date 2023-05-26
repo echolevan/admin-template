@@ -33,6 +33,14 @@ export default [
                 meta: {
                     title: '页面管理',
                 }
+            },
+            {
+                path: '/system/kLine',
+                name: 'systemKLine',
+                component: SysPage,
+                meta: {
+                    title: 'K线管理',
+                }
             }
         ]
     }

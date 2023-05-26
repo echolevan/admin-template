@@ -1,20 +1,18 @@
 <template>
   <div>
-    <n-button type="primary" @click="addRole">新增角色</n-button>
-    <n-divider />
-    <v-table :columns="columns" :data="data" :loading="loading" :pagination="pagination" :searchParams="searchParams" :selectionParams="selectionParams"
-             @updateSorter="updateSorter" @update:page="updatePage" @submitSearch="submitSearch" @batchSubmit="batchSubmit"></v-table>
+    <v-table :columns="columns" :data="data" :loading="loading" :pagination="pagination" :searchParams="searchParams"
+             @updateSorter="updateSorter" @update:filters="updateFilters" @update:page="updatePage"
+             @submitSearch="submitSearch"></v-table>
   </div>
 </template>
 
 <script lang="ts" setup>
 import {ref, h} from 'vue'
 import VTable from '@/components/coms/Table.vue'
-import {NButton} from 'naive-ui'
+import {NTag, NButton} from 'naive-ui'
 
 const columns = <any>ref([])
 const searchParams = <any>ref([])
-const selectionParams = <any>ref([])
 const data = <any>ref([])
 const loading = ref(true)
 const pagination = <any>ref({
@@ -29,57 +27,57 @@ const pagination = <any>ref({
 columns.value = [
   ['selection'],
   ['', '名称', 'name', {}, false, false, []],
-  ['', '备注', 'note', {}, false, false, []],
-  ['', '更新时间', 'createdAt', '', true, false, []],
+  ['', '年龄', 'age', {}, true, true, [{label: '<20', value: 1}, {label: '>=20', value: 2}]],
+  ['render', '标签', 'tags', {
+    render(row: { tags: any[] }) {
+      return row.tags.map((tagKey) => {
+        return h(
+            NTag,
+            {
+              style: {
+                marginRight: '6px'
+              },
+              type: 'info',
+              bordered: false
+            },
+            {
+              default: () => tagKey
+            }
+        )
+      })
+    }
+  }, true, true, [{label: '<20', value: 1}, {label: '>=20', value: 2}]],
+  ['', '注册时间', 'createdAt', '', true, false, []],
   ['render', '操作', 'actions', {
     render(row: any) {
-      return [
-        h(
-            NButton,
-            {
-              size: 'small',
-              type: 'info',
-              onClick: () => operationRole(row, 'edit')
-            },
-            {default: () => '编辑'}
-        ),
-        h(
-            NButton,
-            {
-              size: 'small',
-              type: 'primary',
-              onClick: () => operationRole(row, 'copy'),
-              style: 'margin-left: 15px'
-            },
-            {default: () => '复制'}
-        ),
-        h(
-            NButton,
-            {
-              size: 'small',
-              type: 'error',
-              onClick: () => operationRole(row, 'delete'),
-              style: 'margin-left: 15px'
-            },
-            {default: () => '删除'}
-        )
-      ]
+      return h(
+          NButton,
+          {
+            size: 'small',
+            onClick: () => sendMail(row)
+          },
+          {default: () => 'Send Email' + '--' + row.name}
+      )
     }
   }, false, false, []],
 ]
 
 searchParams.value = [
   // 类型、字段中文名、字段名、 默认值、 筛选条件
-  ['input', '角色名称', 'name', '', []],
+  ['input', '名称', 'name', '', []],
+  ['select', '年龄', 'age', '', [{label: '<20', value: 1}, {label: '>=20', value: 2}], 'multiple'],
+  ['switch', '是否是主账号', 'isMaster', false]
 ]
 
-selectionParams.value = [
-  ['删除', 'error', 'batchDelete'],
-  ['禁用', 'warning', 'batchDisable'],
-]
-
-const operationRole = (row: any, type: string) => {
-  console.log(row, type);
+const sendMail = (row: any) => {
+  data.value.push({
+    'id': 3,
+    'name': 'Kit',
+    'age': 30,
+    'tags': ['cool', 'teacher-1'],
+    'createdAt': '2022-02-034 22:00:00',
+  })
+  console.log(row);
 }
 
 const getLists = (page: number, size: number) => {
@@ -107,7 +105,11 @@ const updateSorter = (sorter: any) => {
   getLists(pagination.page, pagination.pageSize)
   console.log(sorter);
 }
-
+const updateFilters = (filters: any) => {
+  loading.value = !loading.value
+  getLists(pagination.page, pagination.pageSize)
+  console.log(filters);
+}
 const updatePage = (currentPage: any) => {
   loading.value = !loading.value
   pagination.value.page = currentPage
@@ -120,14 +122,6 @@ const submitSearch = (search: any) => {
   pagination.value.page = 1
   getLists(pagination.page, pagination.pageSize)
   console.log(search);
-}
-
-const batchSubmit = (type: string, ids: any) => {
-  console.log(type, ids);
-}
-
-const addRole = () => {
-  console.log('addRole');
 }
 
 </script>

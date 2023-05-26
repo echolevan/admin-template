@@ -6,12 +6,11 @@ import axiosInstance from './base/index'
  */
 export function apiLogin(user: string, password: string) {
     return new Promise<{
-        code: number | string;
-        data: any;
+        token: any;
         message: string;
     }>((resolve, reject) => {
-        axiosInstance.post(`api/mock/v1/auth/login`, {
-            user: user,
+        axiosInstance.post(`api/admin/auth/sign-up`, {
+            username: user,
             password: password,
         }).then(({data}) => {
             return resolve(data)
@@ -31,7 +30,7 @@ export function apiUserInfo() {
         data: any;
         message: string;
     }>((resolve, reject) => {
-        axiosInstance.post(`api/mock/v1/auth/user`).then(({data}) => {
+        axiosInstance.post(`api/admin/auth/info`).then(({data}) => {
             return resolve(data)
         }).catch((error) => {
             return reject(error)
